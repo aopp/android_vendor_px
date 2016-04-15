@@ -23,5 +23,10 @@ if /system/xbin/busybox mount | /system/xbin/busybox grep "/data " | /system/xbi
   /system/xbin/busybox mount -o remount,suid /data
 fi
 
+if [ -n "$1" ]; then
+  #run the seeded task in the chroot
+  /system/xbin/busybox chroot $NEW_ROOT /bin/bash --login -c $1
+fi
+
 # Drop user to shell
 /system/xbin/busybox chroot $NEW_ROOT /bin/bash --login
