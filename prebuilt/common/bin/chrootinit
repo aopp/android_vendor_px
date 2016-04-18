@@ -8,15 +8,21 @@ fi
 
 if grep -q squashfs /proc/filesystems; then
   if [ ! -f /sdcard/Android/data/com.pwnieexpress.android.pxinstaller/files/stockchroot.sfs ]; then
-    printf "Unable to read stockchroot.sfs.\n"
-    exit 1
+    printf "Unable to read stockchroot.sfs\n"
+    # We have squashfs support, but can't read the sfs chroot
+    if [ ! -f /sdcard/Android/data/com.pwnieexpress.android.pxinstaller/files/stockchroot.img ]; then
+      printf "Unable to read stockchroot.img. No chroot file present\n"
+      exit 1
+    else
+      chroot_file="/sdcard/Android/data/com.pwnieexpress.android.pxinstaller/files/stockchroot.img"
+    fi
   else
     chroot_file="/sdcard/Android/data/com.pwnieexpress.android.pxinstaller/files/stockchroot.sfs"
   fi
 else
   printf "No squashfs support present\n"
   if [ ! -f /sdcard/Android/data/com.pwnieexpress.android.pxinstaller/files/stockchroot.img ]; then
-    printf "Unable to read stockchroot.img. No chroot file present.\n"
+    printf "Unable to read stockchroot.img\n"
     exit 1
   else
     chroot_file="/sdcard/Android/data/com.pwnieexpress.android.pxinstaller/files/stockchroot.img"
