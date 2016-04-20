@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# Initial chroot setup 
+# Initial chroot setup
 
 if [ ! -x /system/bin/getprop ]; then
   printf "Unable to execute /system/bin/getprop (needed for device detection)\n"
@@ -9,24 +9,13 @@ fi
 if grep -q squashfs /proc/filesystems; then
   if [ ! -f /sdcard/Android/data/com.pwnieexpress.android.pxinstaller/files/stockchroot.sfs ]; then
     printf "Unable to read stockchroot.sfs\n"
-    # We have squashfs support, but can't read the sfs chroot
-    if [ ! -f /sdcard/Android/data/com.pwnieexpress.android.pxinstaller/files/stockchroot.img ]; then
-      printf "Unable to read stockchroot.img. No chroot file present\n"
-      exit 1
-    else
-      chroot_file="/sdcard/Android/data/com.pwnieexpress.android.pxinstaller/files/stockchroot.img"
-    fi
+    exit 1
   else
     chroot_file="/sdcard/Android/data/com.pwnieexpress.android.pxinstaller/files/stockchroot.sfs"
   fi
 else
   printf "No squashfs support present\n"
-  if [ ! -f /sdcard/Android/data/com.pwnieexpress.android.pxinstaller/files/stockchroot.img ]; then
-    printf "Unable to read stockchroot.img\n"
-    exit 1
-  else
-    chroot_file="/sdcard/Android/data/com.pwnieexpress.android.pxinstaller/files/stockchroot.img"
-  fi
+  exit 1
 fi
 
 # Error fast
@@ -38,13 +27,13 @@ busybox mkdir -p /data/local/kali-tmp
 busybox mount -t auto "${chroot_file}" /data/local/kali-tmp
 busybox cp -a /data/local/kali-tmp/* /data/local/kali
 busybox umount /data/local/kali-tmp
-busybox rm -r /data/local/kali-tmp
+busybox rm -rf /data/local/kali-tmp
 
 # Fix chroot permissions
 busybox chmod 0755 /data/local/kali
 
 # Detect form factor
-hardw=$(/system/bin/getprop ro.build.characteristics)
+hardw=$(/system/bin/getprop ro.build.characteristics | busybox cut -d, -f 1)
 case ${hardw} in
   phone)
     PRODUCT="Pwn Phone"
