@@ -33,7 +33,7 @@ busybox rm -rf /data/local/kali-tmp
 busybox chmod 0755 /data/local/kali
 
 # Detect form factor
-hardw=$(/system/bin/getprop ro.build.characteristics)
+hardw=$(/system/bin/getprop ro.build.characteristics | busybox cut -d, -f 1)
 case ${hardw} in
   phone)
     PRODUCT="Pwn Phone"
