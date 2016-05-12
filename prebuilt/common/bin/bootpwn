@@ -24,6 +24,11 @@ if /system/xbin/busybox mount | /system/xbin/busybox grep "/data " | /system/xbi
   /system/xbin/busybox mount -o remount,suid /data
 fi
 
+#Do these to normalize the android env into the expected chroot env and avoid env corruption
+export SHELL=/bin/bash
+unset MKSH
+unset TERMINFO
+
 if [ -n "$1" ]; then
   #run the seeded task in the chroot
   /system/xbin/busybox chroot $NEW_ROOT /bin/bash --login -c $1
