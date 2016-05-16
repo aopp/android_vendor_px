@@ -1,0 +1,30 @@
+#!/system/bin/sh
+# Additional environment setup
+
+dest="/data/data/com.cyanogenmod.trebuchet/databases/"
+database="launcher.db"
+
+if [ ! -f /data/data/com.pwnieexpress.android.pxinstaller/databases/launcher.db ]; then
+  printf "Unable to read launcher.db\n"
+  exit 1
+else 
+  launcher_file="/data/data/com.pwnieexpress.android.pxinstaller/databases/launcher.db"
+fi
+
+# Error fast
+set -e
+ 
+# Write the launcher database
+busybox cp ${launcher_file} ${dest}  
+
+# Fix permissions
+if [ ! -f /data/data/com.cyanogenmod.trebuchet/databases/launcher.db-journal ]; then
+  printf "Unable to read launcher.db-journal\n"
+  exit 1
+else 
+  check_file="/data/data/com.cyanogenmod.trebuchet/databases/launcher.db-journal"
+fi
+uid=`ls -l ${check_file} |awk '{ print $2 }'`
+guid=`ls -l ${check_file} |awk '{ print $3 }'`
+busybox chown ${uid}:${guid} ${dest}${database}
+busybox chmod 0660 ${dest}${database}

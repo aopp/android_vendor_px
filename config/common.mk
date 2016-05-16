@@ -8,6 +8,7 @@ PRODUCT_PACKAGES += \
 # Required PX legacy packages
 PRODUCT_PACKAGES += \
     Airodump \
+    BlueHydra \
     Bluelog \
     BluetoothScan \
     CapturesDump \
@@ -31,9 +32,10 @@ PRODUCT_PACKAGES += \
     Ubertooth \
     Wifite
 
-# Required PX chroot scripts
+# Required PX chroot/env scripts
 PRODUCT_COPY_FILES += \
     vendor/pwnieexpress/prebuilt/common/bin/bootpwn:system/bin/bootpwn \
     vendor/pwnieexpress/prebuilt/common/bin/chrootboot:system/bin/chrootboot \
     vendor/pwnieexpress/prebuilt/common/bin/chrootinit:system/bin/chrootinit \
+    vendor/pwnieexpress/prebuilt/common/bin/envsetup:system/bin/envsetup \
     vendor/pwnieexpress/prebuilt/common/bin/wia-ng.sh:system/bin/wia-ng.sh
