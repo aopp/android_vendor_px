@@ -41,6 +41,7 @@ fi
 [ -L $NEW_ROOT/etc/rc2.d/S??pwnix_realtime_wireless ] && /system/xbin/busybox chroot $NEW_ROOT /etc/init.d/pwnix_realtime_wireless start
 [ -L $NEW_ROOT/etc/rc2.d/S??pwnscan ] && /system/xbin/busybox chroot $NEW_ROOT /etc/init.d/pwnscan start
 [ -L $NEW_ROOT/etc/rc2.d/S??rc.local ] && /system/xbin/busybox chroot $NEW_ROOT /etc/init.d/rc.local start
+[ -L $NEW_ROOT/etc/rc2.d/S??rsyslog ] && /system/xbin/busybox chroot $NEW_ROOT /etc/init.d/rsyslog start
 
 # If first_boot.sh is in chroot root filesystem (/data/local/kali); then
 # run it to generate SSH keys, etc. This should be run last
