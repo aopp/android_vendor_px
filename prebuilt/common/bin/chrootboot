@@ -51,3 +51,6 @@ fi
 
 #this line tells the kernel to route packets properly for the external wifi card
 ip rule add from all oif wlan1 lookup local_network pref 14000
+#this line tells the kernel to route packets properly for airbase-ng
+ip rule add from all oif at0 lookup local_network pref 14000
+ip rule add from all oif at1 lookup local_network pref 14000
