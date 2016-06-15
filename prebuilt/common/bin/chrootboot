@@ -48,3 +48,6 @@ fi
 if [ -x $NEW_ROOT/first_boot.sh ]; then
   /system/xbin/busybox chroot $NEW_ROOT /bin/bash -l -c /first_boot.sh
 fi
+
+#this line tells the kernel to route packets properly for the external wifi card
+ip rule add from all oif wlan1 lookup local_network pref 14000
