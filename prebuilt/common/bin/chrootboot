@@ -48,3 +48,13 @@ fi
 if [ -x $NEW_ROOT/first_boot.sh ]; then
   /system/xbin/busybox chroot $NEW_ROOT /bin/bash -l -c /first_boot.sh
 fi
+
+# Android 5+ uses policy based routing and the table information is variable
+# ensure files are hard linked at boot, copy if that fails
+rt_tables="/data/misc/net/rt_tables"
+if [ -r "${rt_tables}" ]; then
+  /system/xbin/busybox ln -nf "${rt_tables}" $NEW_ROOT/etc/iproute2/rt_tables
+  if [ "$?" != "0" ]; then
+    /system/xbin/busybox cp -f "${rt_tables}" $NEW_ROOT/etc/iproute2/rt_tables
+  fi
+fi
