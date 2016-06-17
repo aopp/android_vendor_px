@@ -55,6 +55,6 @@ rt_tables="/data/misc/net/rt_tables"
 if [ -r "${rt_tables}" ]; then
   /system/xbin/busybox ln -nf "${rt_tables}" $NEW_ROOT/etc/iproute2/rt_tables
   if [ "$?" != "0" ]; then
-    /system/xbin/busybox cp "${rt_tables}" $NEW_ROOT/etc/iproute2/rt_tables
+    /system/xbin/busybox cp -f "${rt_tables}" $NEW_ROOT/etc/iproute2/rt_tables
   fi
 fi
