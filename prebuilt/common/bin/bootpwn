@@ -29,11 +29,6 @@ export SHELL=/bin/bash
 unset MKSH
 unset TERMINFO
 
-# Android 5+ uses policy based routing and the table information is variable
-# Copy the file so we know we have the latest in the chroot
-rt_tables="/data/misc/net/rt_tables"
-[ -r "${rt_tables}" ] && /system/xbin/busybox cp "${rt_tables}" /data/local/kali/etc/iproute2/rt_tables
-
 if [ -n "$1" ]; then
   # Run the seeded task in the chroot
   /system/xbin/busybox chroot $NEW_ROOT /bin/bash --login -c $1
