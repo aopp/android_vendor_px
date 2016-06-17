@@ -19,26 +19,25 @@ if [ -f /sys/class/net/wlan0/device/modalias ];then
         WLAN_SWITCHAROO=1
       elif [ "$WLAN1_BUS" = "usb" ]; then
         printf "Interface wlan1 is also usb, dazed and confused, failure.\n"
-        return 1
+        exit 1
       else
         printf "Interface wlan1 exists but isn't usb or sdio, failure.\n"
-        return 1
+        exit 1
       fi
     else
       printf "Interface wlan1 does not seem to exist, nothing to do.\n"
-      return 0
+      exit 0
     fi
   elif [ "$WLAN0_BUS" = "sdio" ]; then
     printf "Interface wlan0 is already the internal sdio wifi nic.\n"
-    return 0
+    exit 0
   else
     printf "Interface wlan0 exists but isn't usb or sdio, failure.\n"
-    return 1
+    exit 1
   fi
 else
   printf "Unable to use modalias to determine which device wlan0 is.\n"
-  return 1
-  #/system/bin/wlan_interface_assigner.sh
+  exit 1
 fi
 
 if [ "$WLAN_SWITCHAROO" = "1" ]; then
