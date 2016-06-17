@@ -20,6 +20,14 @@ if [ -f /sys/class/net/wlan0/device/modalias ];then
       elif [ "$WLAN1_BUS" = "usb" ]; then
         printf "Interface wlan1 is also usb, dazed and confused, failure.\n"
         exit 1
+      elif [ "$WLAN1_BUS" = "platform" ]; then
+        if [ "$(cat /sys/class/net/wlan1/device/modalias)" = "platform:wcnss_wlan" ]; then
+          printf "Interface wlan1 is deb/flo internal.\n"
+          WLAN_SWITCHAROO=1
+        else
+          printf "Interface wlan1 bus returns platform but deb/flo check fails, who are you?\n"
+          exit 1
+        fi
       else
         printf "Interface wlan1 exists but isn't usb or sdio, failure.\n"
         exit 1
