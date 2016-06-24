@@ -8,50 +8,50 @@ REENABLE_WIFI=0
 
 #Check if wlan0 is usb
 if [ -f /sys/class/net/wlan0/device/modalias ];then
-  WLAN0_BUS=$(awk -F: '{print $1}' /sys/class/net/wlan0/device/modalias)
+  WLAN0_BUS=$(/system/xbin/busybox awk -F: '{print $1}' /sys/class/net/wlan0/device/modalias)
   if [ "$WLAN0_BUS" = "usb" ]; then
-    printf "Interface wlan0 is usb.\n"
+    /system/xbin/busybox printf "Interface wlan0 is usb.\n"
     if [ -f /sys/class/net/wlan1/device/modalias ];then
       #check if wlan1 is usb
-      WLAN1_BUS=$(awk -F: '{print $1}' /sys/class/net/wlan1/device/modalias)
+      WLAN1_BUS=$(/system/xbin/busybox awk -F: '{print $1}' /sys/class/net/wlan1/device/modalias)
       if [ "$WLAN1_BUS" = "sdio" ]; then
-        printf "Interface wlan1 is sdio.\n"
+        /system/xbin/busybox printf "Interface wlan1 is sdio.\n"
         WLAN_SWITCHAROO=1
       elif [ "$WLAN1_BUS" = "usb" ]; then
-        printf "Interface wlan1 is also usb, dazed and confused, failure.\n"
+        /system/xbin/busybox printf "Interface wlan1 is also usb, dazed and confused, failure.\n"
         exit 1
       elif [ "$WLAN1_BUS" = "platform" ]; then
         if [ "$(cat /sys/class/net/wlan1/device/modalias)" = "platform:wcnss_wlan" ]; then
-          printf "Interface wlan1 is deb/flo internal.\n"
+          /system/xbin/busybox printf "Interface wlan1 is deb/flo internal.\n"
           WLAN_SWITCHAROO=1
         else
-          printf "Interface wlan1 bus returns platform but deb/flo check fails, who are you?\n"
+          /system/xbin/busybox printf "Interface wlan1 bus returns platform but deb/flo check fails, who are you?\n"
           exit 1
         fi
       else
-        printf "Interface wlan1 exists but isn't usb or sdio, failure.\n"
+        /system/xbin/busybox printf "Interface wlan1 exists but isn't usb or sdio, failure.\n"
         exit 1
       fi
     else
-      printf "Interface wlan1 does not seem to exist, nothing to do.\n"
+      /system/xbin/busybox printf "Interface wlan1 does not seem to exist, nothing to do.\n"
       exit 0
     fi
   elif [ "$WLAN0_BUS" = "sdio" ]; then
-    printf "Interface wlan0 is already the internal sdio wifi nic.\n"
+    /system/xbin/busybox printf "Interface wlan0 is already the internal sdio wifi nic.\n"
     exit 0
   else
-    printf "Interface wlan0 exists but isn't usb or sdio, failure.\n"
+    /system/xbin/busybox printf "Interface wlan0 exists but isn't usb or sdio, failure.\n"
     exit 1
   fi
 else
-  printf "Unable to use modalias to determine which device wlan0 is.\n"
+  /system/xbin/busybox printf "Unable to use modalias to determine which device wlan0 is.\n"
   exit 1
 fi
 
 if [ "$WLAN_SWITCHAROO" = "1" ]; then
-  printf "Switching wlan0 and wlan1..."
-  onboard_wlan_mac=$(/system/xbin/busybox ifconfig -a | grep "^wlan1" | awk '{print $5}')
-  external_wlan_mac=$(/system/xbin/busybox ifconfig -a | grep "^wlan0" | awk '{print $5}')
+  /system/xbin/busybox printf "Switching wlan0 and wlan1..."
+  onboard_wlan_mac=$(/system/xbin/busybox ifconfig -a | /system/xbin/busybox grep "^wlan1" | /system/xbin/busybox awk '{print $5}')
+  external_wlan_mac=$(/system/xbin/busybox ifconfig -a | /system/xbin/busybox grep "^wlan0" | /system/xbin/busybox awk '{print $5}')
 
   if [ "$(/system/bin/getprop wlan.driver.status)" != "unloaded" ]; then
     # Disable Android wifi manager
@@ -80,5 +80,5 @@ if [ "$WLAN_SWITCHAROO" = "1" ]; then
     # Re-enable Android wifi manager
     /system/bin/svc wifi enable
   fi
-  printf "Complete.\n"
+  /system/xbin/busybox printf "Complete.\n"
 fi
