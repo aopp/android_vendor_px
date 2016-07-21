@@ -11,6 +11,7 @@ if [ -f /sys/class/net/wlan0/device/modalias ];then
   WLAN0_BUS=$(/system/xbin/busybox awk -F: '{print $1}' /sys/class/net/wlan0/device/modalias)
   if [ "$WLAN0_BUS" = "usb" ]; then
     /system/xbin/busybox printf "Interface wlan0 is usb.\n"
+    WLAN0_SWITCHAROO=1
     if [ -f /sys/class/net/wlan1/device/modalias ];then
       #check if wlan1 is usb
       WLAN1_BUS=$(/system/xbin/busybox awk -F: '{print $1}' /sys/class/net/wlan1/device/modalias)
@@ -33,8 +34,12 @@ if [ -f /sys/class/net/wlan0/device/modalias ];then
         exit 1
       fi
     else
-      /system/xbin/busybox printf "Interface wlan1 does not seem to exist, nothing to do.\n"
-      exit 0
+      if [ "$WLAN0_SWITCHAROO" = "1" ]; then
+        /system/xbin/busybox printf "Interface wlan1 does not seem to exist, moving wlan0 to wlan1.\n"
+      else
+        /system/xbin/busybox printf "Interface wlan1 does not seem to exist, nothing to do.\n"
+        exit 0
+      fi
     fi
   elif [ "$WLAN0_BUS" = "sdio" ]; then
     /system/xbin/busybox printf "Interface wlan0 is already the internal sdio wifi nic.\n"
@@ -49,7 +54,7 @@ else
 fi
 
 if [ "$WLAN_SWITCHAROO" = "1" ]; then
-  /system/xbin/busybox printf "Switching wlan0 and wlan1..."
+  /system/xbin/busybox printf "Switching wlan0 and wlan1...\n"
   onboard_wlan_mac=$(/system/xbin/busybox ifconfig -a | /system/xbin/busybox grep "^wlan1" | /system/xbin/busybox awk '{print $5}')
   external_wlan_mac=$(/system/xbin/busybox ifconfig -a | /system/xbin/busybox grep "^wlan0" | /system/xbin/busybox awk '{print $5}')
 
@@ -81,4 +86,11 @@ if [ "$WLAN_SWITCHAROO" = "1" ]; then
     /system/bin/svc wifi enable
   fi
   /system/xbin/busybox printf "Complete.\n"
+elif [ "${WLAN0_SWITCHAROO}" = "1" ]; then
+  #quick hack for deb/flo that pulls the wifi completely off the bus when off
+  /system/xbin/busybox printf "Moving wlan0 to wlan1...\n"
+  external_wlan_mac=$(/system/xbin/busybox ifconfig -a | /system/xbin/busybox grep "^wlan0" | /system/xbin/busybox awk '{print $5}')
+  /system/xbin/busybox ifconfig wlan0 down
+  # Set external wlan to wlan1
+  /system/xbin/busybox nameif wlan1 "${external_wlan_mac}"
 fi
