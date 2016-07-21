@@ -34,7 +34,7 @@ if [ -f /sys/class/net/wlan0/device/modalias ];then
         exit 1
       fi
     else
-      if [ "$WLAN0_SWITCHROO" = "1" ]; then
+      if [ "$WLAN0_SWITCHAROO" = "1" ]; then
         /system/xbin/busybox printf "Interface wlan1 does not seem to exist, moving wlan0 to wlan1.\n"
       else
         /system/xbin/busybox printf "Interface wlan1 does not seem to exist, nothing to do.\n"
