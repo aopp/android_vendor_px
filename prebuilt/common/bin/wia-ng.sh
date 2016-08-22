@@ -15,6 +15,7 @@ if [ -r "/sys/class/net/wlan0/device/modalias" ]; then
   else
     /system/xbin/busybox printf "Interface wlan0 is unknown bus ${WLAN0_BUS}, quitting.\n"
     exit 1
+  fi
 else
   /system/xbin/busybox printf "Unable to read wlan0 bus, nothing we can do.\n"
   exit 1
@@ -27,7 +28,7 @@ if [ -d /sys/class/net ]; then
   for iface in /sys/class/net/*; do
     if [ -r "/sys/class/net/${iface}/uevent" ]; then
       #check wlan cards
-      if $(grep -q "DEVTYPE=wlan" "/sys/class/net/${iface}/uevent"); then
+      if grep -q "DEVTYPE=wlan" "/sys/class/net/${iface}/uevent"; then
         if [ -r "/sys/class/net/${iface}/device/modalias" ]; then
           BUS=$(/system/xbin/busybox awk -F: '{print $1}' "/sys/class/net/${iface}/device/modalias")
           if [ "${BUS}" = "sdio" ] || [ "${BUS}" = "platform" ]; then
