@@ -25,14 +25,14 @@ fi
 INTERNAL=""
 if [ -d /sys/class/net ]; then
   #check all network cards
-  for iface in /sys/class/net/*; do
-    if [ -r "/sys/class/net/${iface}/uevent" ]; then
+  for i in /sys/class/net/*; do
+    if [ -r "${i}/uevent" ]; then
       #check wlan cards
-      if grep -q "DEVTYPE=wlan" "/sys/class/net/${iface}/uevent"; then
-        if [ -r "/sys/class/net/${iface}/device/modalias" ]; then
-          BUS=$(/system/xbin/busybox awk -F: '{print $1}' "/sys/class/net/${iface}/device/modalias")
+      if grep -q "DEVTYPE=wlan" "${i}/uevent"; then
+        if [ -r "${i}/device/modalias" ]; then
+          BUS=$(/system/xbin/busybox awk -F: '{print $1}' "${i}/device/modalias")
           if [ "${BUS}" = "sdio" ] || [ "${BUS}" = "platform" ]; then
-            INTERNAL="${iface}"
+            INTERNAL="${i#/sys/class/net/}"
             break
           fi
         fi
