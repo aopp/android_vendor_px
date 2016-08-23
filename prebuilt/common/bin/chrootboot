@@ -19,7 +19,6 @@ export NEW_ROOT=/data/local/kali
 /system/xbin/busybox mount --rbind /system $NEW_ROOT/system
 
 # Run script to assign interfaces at system startup (wlan0 internal, wlan1 TP-Link)
-sleep 20
 /system/bin/wia-ng.sh
 
 # Setup environment variables for shell environment.
