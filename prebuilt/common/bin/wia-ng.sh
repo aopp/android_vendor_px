@@ -29,11 +29,17 @@ if [ -d /sys/class/net ]; then
     if [ -r "${i}/uevent" ]; then
       #check wlan cards
       if grep -q "DEVTYPE=wlan" "${i}/uevent"; then
+        # XXX TODO: better check here, is there a way to check for wifi direct mode?
+        if [ "${i}" = "/sys/class/net/p2p0" ]; then
+          continue
+        fi
         if [ -r "${i}/device/modalias" ]; then
           BUS=$(/system/xbin/busybox awk -F: '{print $1}' "${i}/device/modalias")
           if [ "${BUS}" = "sdio" ] || [ "${BUS}" = "platform" ]; then
             INTERNAL="${i#/sys/class/net/}"
             break
+          else
+            continue
           fi
         fi
       fi
