@@ -8,7 +8,6 @@ PRODUCT_PACKAGES += \
 # Required PX legacy packages
 PRODUCT_PACKAGES += \
     Airodump \
-    BlueHydra \
     Bluelog \
     BluetoothScan \
     CapturesDump \
@@ -31,6 +30,11 @@ PRODUCT_PACKAGES += \
     TShark \
     Ubertooth \
     Wifite
+
+# Optional AOPP packages
+ifeq (,$(findstring $(TARGET_PRODUCT),aopp_deb aopp_hammerhead))
+    PRODUCT_PACKAGES += BlueHydra
+endif
 
 # Required Pwnix env scripts
 PRODUCT_COPY_FILES += \
