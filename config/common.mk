@@ -1,6 +1,6 @@
 # Common config for all supported devices
 
-# Required PX packages
+# Required AOPP packages
 PRODUCT_PACKAGES += \
     PxInstaller \
     TerminalEmulator
@@ -32,7 +32,7 @@ PRODUCT_PACKAGES += \
     Ubertooth \
     Wifite
 
-# Required PX chroot/env scripts
+# Required Pwnix env scripts
 PRODUCT_COPY_FILES += \
     vendor/pwnieexpress/prebuilt/common/bin/bootpwn:system/bin/bootpwn \
     vendor/pwnieexpress/prebuilt/common/bin/chrootboot:system/bin/chrootboot \
