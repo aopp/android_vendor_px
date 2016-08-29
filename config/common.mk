@@ -52,3 +52,9 @@ PRODUCT_COPY_FILES += \
     vendor/pwnieexpress/prebuilt/common/bin/chrootinit:system/bin/chrootinit \
     vendor/pwnieexpress/prebuilt/common/bin/envsetup:system/bin/envsetup \
     vendor/pwnieexpress/prebuilt/common/bin/wia-ng.sh:system/bin/wia-ng.sh
+
+# Backup tool
+ifneq ($(WITH_GMS),true)
+PRODUCT_COPY_FILES += \
+    vendor/pwnieexpress/prebuilt/common/bin/99-supersu.sh:system/addon.d/99-supersu.sh
+endif
