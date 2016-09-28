@@ -33,6 +33,23 @@ if [ -f "$NEW_ROOT/etc/mtab" ]; then
   /system/xbin/busybox chroot $NEW_ROOT /bin/ln -s /proc/self/mounts /etc/mtab
 fi
 
+# it seems that a lot of things expect cross links from /proc to dev which are not made by default, cute.
+if [ ! -L /dev/fd ]; then
+  ln -snf /proc/self/fd /dev/fd
+fi
+if [ ! -L /dev/stdin ]; then
+  ln -snf /proc/self/fd/0 /dev/stdin
+fi
+if [ ! -L /dev/stdout ]; then
+  ln -snf /proc/self/fd/1 /dev/stdout
+fi
+if [ ! -L /dev/stderr ]; then
+  ln -snf /proc/self/fd/2 /dev/stderr
+fi
+if [ ! -L /dev/core ]; then
+  ln -snf /proc/kcore /dev/core
+fi
+
 # Start services in chroot environment
 [ -L $NEW_ROOT/etc/rc2.d/S??cron ] && /system/xbin/busybox chroot $NEW_ROOT /etc/init.d/cron start
 [ -L $NEW_ROOT/etc/rc2.d/S??hermes ] && /system/xbin/busybox chroot $NEW_ROOT /etc/init.d/hermes start
