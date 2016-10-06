@@ -15,7 +15,7 @@ public class MainActivity extends Activity {
     }
 
     private class LaunchTerminalEmulator extends AsyncTask<Void, Void, Void> {
-        private static final String INITIAL_COMMAND = "bootpwn\r./opt/pwnix/pwnpad-scripts/set.sh";
+        private static final String INITIAL_COMMAND = "bootpwn\r. /opt/pwnix/pwnpad-scripts/set.sh";
         private static final String INITIAL_COMMAND_PROPERTY = "jackpal.androidterm.iInitialCommand";
         private static final String REMOTE_INTENT = "jackpal.androidterm.RUN_SCRIPT";
         private static final String INTENT_CATEGORY = "android.intent.category.DEFAULT";
