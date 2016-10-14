@@ -36,7 +36,7 @@ busybox chmod 0755 /data/local/kali
 hardw=$(/system/bin/getprop ro.build.characteristics | busybox cut -d, -f 1)
 case ${hardw} in
   phone)
-    PRODUCT="Pwn Phone"
+    PRODUCT="Pwn Phone 2014"
     product="pwnphone"
     ;;
   tablet)
