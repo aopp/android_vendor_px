@@ -36,6 +36,10 @@ ifeq (,$(findstring $(TARGET_PRODUCT),aopp_deb aopp_hammerhead))
     PRODUCT_PACKAGES += BlueHydra
 endif
 
+# Optionally include BusyBox
+PRODUCT_PACKAGES += \
+    busybox
+
 # Enable root usb debugging on experimental builds
 ifeq ($(RELEASE_TYPE),EXPERIMENTAL)
     PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
