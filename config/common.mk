@@ -40,6 +40,12 @@ endif
 PRODUCT_PACKAGES += \
     busybox
 
+# Optionally include su
+ifeq ($(WITH_SU),true)
+    PRODUCT_PROPERTY_OVERRIDES += \
+        persist.sys.root_access=1
+endif
+
 # Enable root usb debugging on experimental builds
 ifeq ($(RELEASE_TYPE),EXPERIMENTAL)
     PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
