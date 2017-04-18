@@ -40,6 +40,12 @@ endif
 PRODUCT_PACKAGES += \
     busybox
 
+# Optionally include su
+ifeq ($(WITH_SU),true)
+    PRODUCT_PROPERTY_OVERRIDES += \
+        persist.sys.root_access=1
+endif
+
 # Enable root usb debugging on experimental builds
 ifeq ($(RELEASE_TYPE),EXPERIMENTAL)
     PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
@@ -56,9 +62,3 @@ PRODUCT_COPY_FILES += \
     vendor/pwnieexpress/prebuilt/common/bin/chrootinit:system/bin/chrootinit \
     vendor/pwnieexpress/prebuilt/common/bin/envsetup:system/bin/envsetup \
     vendor/pwnieexpress/prebuilt/common/bin/wia-ng.sh:system/bin/wia-ng.sh
-
-# Backup tool
-ifneq ($(WITH_GMS),true)
-PRODUCT_COPY_FILES += \
-    vendor/pwnieexpress/prebuilt/common/bin/99-supersu.sh:system/addon.d/99-supersu.sh
-endif
