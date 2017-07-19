@@ -51,8 +51,8 @@ fi
 if [ -n "${INTERNAL}" ]; then
   # Switch wlan0 and the internal
   /system/bin/toybox printf "Switching wlan0 and ${INTERNAL}...\n"
-  internal_wlan_mac=$(/system/bin/toybox ifconfig -a |/system/bin/toybox grep "^${INTERNAL}" |/system/bin/toybox tr -s [:blank:] |/system/bin/toybox cut -d' ' -f5)
-  external_wlan_mac=$(/system/bin/toybox ifconfig -a |/system/bin/toybox grep "^wlan0" |/system/bin/toybox tr -s [:blank:] |/system/bin/toybox cut -d' ' -f5)
+  internal_wlan_mac=$(/system/bin/toybox ifconfig -a | /system/bin/toybox grep "^${INTERNAL}" | /system/bin/toybox tr -s [:blank:] | /system/bin/toybox cut -d' ' -f5)
+  external_wlan_mac=$(/system/bin/toybox ifconfig -a | /system/bin/toybox grep "^wlan0" | /system/bin/toybox tr -s [:blank:] | /system/bin/toybox cut -d' ' -f5)
 
   if [ "$(/system/bin/getprop wlan.driver.status)" != "unloaded" ]; then
     # Disable Android wifi manager
@@ -93,7 +93,7 @@ else
   done
 
   /system/bin/toybox printf "Moving wlan0 to wlan${i}...\n"
-  external_wlan_mac=$(/system/bin/toybox ifconfig -a |/system/bin/toybox grep "^wlan0" |/system/bin/toybox tr -s [:blank:] |/system/bin/toybox cut -d' ' -f5)
+  external_wlan_mac=$(/system/bin/toybox ifconfig -a | /system/bin/toybox grep "^wlan0" | /system/bin/toybox tr -s [:blank:] | /system/bin/toybox cut -d' ' -f5)
   /system/bin/toybox ifconfig wlan0 down
   # Set external wlan to wlan1
   /system/bin/toybox ip link set dev "wlan${i}" address "${external_wlan_mac}"

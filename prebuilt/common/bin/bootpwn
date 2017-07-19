@@ -17,7 +17,7 @@ unset LD_PRELOAD
 echo "[!] Welcome to the Pwn zone. Get your game face on."
 
 # /data is being mounted with nosuid which breaks sudo/su in the chroot
-if /system/bin/toybox mount |/system/bin/toybox grep "/data " |/system/bin/toybox grep -q nosuid; then
+if /system/bin/toybox mount | /system/bin/toybox grep "/data " | /system/bin/toybox grep -q nosuid; then
   /system/bin/toybox mount -o remount,suid /data
 fi
 

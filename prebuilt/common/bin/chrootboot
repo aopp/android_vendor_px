@@ -9,7 +9,7 @@ export NEW_ROOT=/data/local/kali
 /system/bin/toybox mount --rbind /sys $NEW_ROOT/sys
  
 # Kali sort of supports selinux so if this is mounted -rw it fails
-/system/bin/toybox mount |/system/bin/toybox grep -q ${NEW_ROOT}/sys/fs/selinux && /system/bin/toybox mount -o remount,ro,bind ${NEW_ROOT}/sys/fs/selinux
+/system/bin/toybox mount | /system/bin/toybox grep -q ${NEW_ROOT}/sys/fs/selinux && /system/bin/toybox mount -o remount,ro,bind ${NEW_ROOT}/sys/fs/selinux
 /system/bin/toybox mount -o nosuid,noexec,relatime -t tmpfs tmpfs $NEW_ROOT/run
 
 # Mount Android filesystems for chroot environment

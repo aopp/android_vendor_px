@@ -35,7 +35,7 @@ set -e
 /system/bin/toybox chmod 0755 /data/local/kali
 
 # Detect form factor
-hardw=$(/system/bin/getprop ro.build.characteristics |/system/bin/toybox cut -d, -f1)
+hardw=$(/system/bin/getprop ro.build.characteristics | /system/bin/toybox cut -d, -f1)
 case ${hardw} in
   phone)
     PRODUCT="Pwn Phone"
