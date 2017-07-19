@@ -36,10 +36,6 @@ ifeq (,$(findstring $(TARGET_PRODUCT),aopp_deb aopp_hammerhead))
     PRODUCT_PACKAGES += BlueHydra
 endif
 
-# Optionally include BusyBox
-PRODUCT_PACKAGES += \
-    busybox
-
 # Optionally include su
 ifeq ($(WITH_SU),true)
     PRODUCT_PROPERTY_OVERRIDES += \
