@@ -25,6 +25,7 @@ fi
 export SHELL=/bin/bash
 unset MKSH
 unset TERMINFO
+unset TMPDIR
 
 if [ -n "$1" ]; then
   # Run the seeded task in the chroot
