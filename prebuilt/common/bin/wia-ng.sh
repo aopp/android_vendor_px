@@ -34,7 +34,7 @@ if [ -d /sys/class/net ]; then
           continue
         fi
         if [ -r "${i}/device/modalias" ]; then
-	  BUS=$(/system/bin/toybox cut -d: -f1 "${i}/device/modalias")
+          BUS=$(/system/bin/toybox cut -d: -f1 "${i}/device/modalias")
           if [ "${BUS}" = "sdio" ] || [ "${BUS}" = "platform" ]; then
             INTERNAL="${i#/sys/class/net/}"
             break
