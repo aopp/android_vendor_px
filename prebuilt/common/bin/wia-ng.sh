@@ -62,18 +62,18 @@ if [ -n "${INTERNAL}" ]; then
   fi
 
   # Down interfaces
-  /system/bin/toybox ifconfig wlan0 down
-  /system/bin/toybox ifconfig "${INTERNAL}" down
+  /system/bin/toybox ip link set dev wlan0 down
+  /system/bin/toybox ip link set dev "${INTERNAL}" down
 
   # Set temporary interface name for internal wlan
-  nameif temp_internal "${internal_wlan_mac}"
+  /system/bin/toybox ip link set dev temp_internal address "${internal_wlan_mac}"
   # Set temporary interface name for external wlan
-  nameif temp_external "${external_wlan_mac}"
+  /system/bin/toybox ip link set dev temp_external address "${external_wlan_mac}"
 
   # Set internal wlan to wlan0
-  nameif wlan0 "${internal_wlan_mac}"
+  /system/bin/toybox ip link set dev wlan0 address "${internal_wlan_mac}"
   # Set external wlan to ${INTERNAL}
-  nameif "${INTERNAL}" "${external_wlan_mac}"
+  /system/bin/toybox ip link set dev "${INTERNAL}" address "${external_wlan_mac}"
 
   if [ "$REENABLE_WIFI" = "1" ]; then
     # Re-enable Android wifi manager
@@ -96,5 +96,5 @@ else
   external_wlan_mac=$(/system/bin/toybox ifconfig -a |/system/bin/toybox grep "^wlan0" |/system/bin/toybox tr -s [:blank:] |/system/bin/toybox cut -d' ' -f5)
   /system/bin/toybox ifconfig wlan0 down
   # Set external wlan to wlan1
-  nameif "wlan${i}" "${external_wlan_mac}"
+  /system/bin/toybox ip link set dev "wlan${i}" address "${external_wlan_mac}"
 fi
