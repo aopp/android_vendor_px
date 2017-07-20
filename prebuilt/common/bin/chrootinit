@@ -34,19 +34,9 @@ set -e
 # Fix chroot permissions
 /system/bin/toybox chmod 0755 /data/local/kali
 
-# Detect form factor
-hardw=$(/system/bin/getprop ro.build.characteristics | /system/bin/toybox cut -d, -f1)
-case ${hardw} in
-  phone)
-    PRODUCT="Pwn Phone"
-    product="pwnphone"
-    ;;
-  tablet)
-    PRODUCT="Pwn Pad"
-    product="pwnpad"
-    ;;
-  *) exit 1 ;;
-esac
+# Set product
+PRODUCT="AOPP"
+product="aopp"
 
 # Set product based on form factor
 echo "$PRODUCT" > /data/local/kali/etc/product
