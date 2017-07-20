@@ -4,24 +4,24 @@
 export NEW_ROOT=/data/local/kali
 
 # Mount other filesystems for chroot environment
-/system/xbin/busybox mount --rbind /dev $NEW_ROOT/dev
-/system/xbin/busybox mount --rbind /proc $NEW_ROOT/proc
-/system/xbin/busybox mount --rbind /sys $NEW_ROOT/sys
+/system/bin/toybox mount --rbind /dev $NEW_ROOT/dev
+/system/bin/toybox mount --rbind /proc $NEW_ROOT/proc
+/system/bin/toybox mount --rbind /sys $NEW_ROOT/sys
  
-# Kali 2 pretends it supports selinux so if this is mounted -rw it fails
-/system/xbin/busybox mount | grep -q ${NEW_ROOT}/sys/fs/selinux && /system/xbin/busybox mount -o remount,ro,bind ${NEW_ROOT}/sys/fs/selinux
-/system/xbin/busybox mount -o nosuid,noexec,relatime -t tmpfs tmpfs $NEW_ROOT/run
+# Kali sort of supports selinux so if this is mounted -rw it fails
+/system/bin/toybox mount | /system/bin/toybox grep -q ${NEW_ROOT}/sys/fs/selinux && /system/bin/toybox mount -o remount,ro,bind ${NEW_ROOT}/sys/fs/selinux
+/system/bin/toybox mount -o nosuid,noexec,relatime -t tmpfs tmpfs $NEW_ROOT/run
 
 # Mount Android filesystems for chroot environment
-[ ! -d "${NEW_ROOT}"/sdcard ] && mkdir "${NEW_ROOT}"/sdcard
-/system/xbin/busybox mount --rbind /data/media/0 $NEW_ROOT/sdcard
-[ ! -d "${NEW_ROOT}"/system ] && mkdir "${NEW_ROOT}"/system
-/system/xbin/busybox mount --rbind /system $NEW_ROOT/system
+[ ! -d "${NEW_ROOT}"/sdcard ] && /system/bin/toybox mkdir "${NEW_ROOT}"/sdcard
+/system/bin/toybox mount --rbind /data/media/0 $NEW_ROOT/sdcard
+[ ! -d "${NEW_ROOT}"/system ] && /system/bin/toybox mkdir "${NEW_ROOT}"/system
+/system/bin/toybox mount --rbind /system $NEW_ROOT/system
 
 # Run script to assign interfaces at system startup (wlan0 internal, wlan1 TP-Link)
 /system/bin/wia-ng.sh
 
-# Setup environment variables for shell environment.
+# Setup environment variables for shell environment
 export HOME=/root
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export TERM=xterm-color
@@ -29,49 +29,49 @@ unset LD_PRELOAD
 
 # Link /etc/mtab to /proc/self/mounts so we know what is mounted
 if [ -f "$NEW_ROOT/etc/mtab" ]; then
-  /system/xbin/busybox chroot $NEW_ROOT /bin/rm -f /etc/mtab
-  /system/xbin/busybox chroot $NEW_ROOT /bin/ln -s /proc/self/mounts /etc/mtab
+  /system/bin/toybox chroot $NEW_ROOT /bin/rm -f /etc/mtab
+  /system/bin/toybox chroot $NEW_ROOT /bin/ln -s /proc/self/mounts /etc/mtab
 fi
 
-# it seems that a lot of things expect cross links from /proc to dev which are not made by default, cute.
+# It seems that a lot of things expect cross links from /proc to dev which are not made by default
 if [ ! -L /dev/fd ]; then
-  /system/xbin/busybox ln -snf /proc/self/fd /dev/fd
+  /system/bin/toybox ln -snf /proc/self/fd /dev/fd
 fi
 if [ ! -L /dev/stdin ]; then
-  /system/xbin/busybox ln -snf /proc/self/fd/0 /dev/stdin
+  /system/bin/toybox ln -snf /proc/self/fd/0 /dev/stdin
 fi
 if [ ! -L /dev/stdout ]; then
-  /system/xbin/busybox ln -snf /proc/self/fd/1 /dev/stdout
+  /system/bin/toybox ln -snf /proc/self/fd/1 /dev/stdout
 fi
 if [ ! -L /dev/stderr ]; then
-  /system/xbin/busybox ln -snf /proc/self/fd/2 /dev/stderr
+  /system/bin/toybox ln -snf /proc/self/fd/2 /dev/stderr
 fi
 if [ ! -L /dev/core ]; then
-  /system/xbin/busybox ln -snf /proc/kcore /dev/core
+  /system/bin/toybox ln -snf /proc/kcore /dev/core
 fi
 
 # Start services in chroot environment
-[ -L $NEW_ROOT/etc/rc2.d/S??cron ] && /system/xbin/busybox chroot $NEW_ROOT /etc/init.d/cron start
-[ -L $NEW_ROOT/etc/rc2.d/S??hermes ] && /system/xbin/busybox chroot $NEW_ROOT /etc/init.d/hermes start
-[ -L $NEW_ROOT/etc/rc2.d/S??insight_api ] && /system/xbin/busybox chroot $NEW_ROOT /etc/init.d/insight_api start
-[ -L $NEW_ROOT/etc/rc2.d/S??pwnix_kismet_server ] && /system/xbin/busybox chroot $NEW_ROOT /etc/init.d/pwnix_kismet_server start
-[ -L $NEW_ROOT/etc/rc2.d/S??pwnix_realtime_wireless ] && /system/xbin/busybox chroot $NEW_ROOT /etc/init.d/pwnix_realtime_wireless start
-[ -L $NEW_ROOT/etc/rc2.d/S??pwnscan ] && /system/xbin/busybox chroot $NEW_ROOT /etc/init.d/pwnscan start
-[ -L $NEW_ROOT/etc/rc2.d/S??rc.local ] && /system/xbin/busybox chroot $NEW_ROOT /etc/init.d/rc.local start
-[ -L $NEW_ROOT/etc/rc2.d/S??rsyslog ] && /system/xbin/busybox chroot $NEW_ROOT /etc/init.d/rsyslog start
+[ -L $NEW_ROOT/etc/rc2.d/S??cron ] && /system/bin/toybox chroot $NEW_ROOT /etc/init.d/cron start
+[ -L $NEW_ROOT/etc/rc2.d/S??hermes ] && /system/bin/toybox chroot $NEW_ROOT /etc/init.d/hermes start
+[ -L $NEW_ROOT/etc/rc2.d/S??insight_api ] && /system/bin/toybox chroot $NEW_ROOT /etc/init.d/insight_api start
+[ -L $NEW_ROOT/etc/rc2.d/S??pwnix_kismet_server ] && /system/bin/toybox chroot $NEW_ROOT /etc/init.d/pwnix_kismet_server start
+[ -L $NEW_ROOT/etc/rc2.d/S??pwnix_realtime_wireless ] && /system/bin/toybox chroot $NEW_ROOT /etc/init.d/pwnix_realtime_wireless start
+[ -L $NEW_ROOT/etc/rc2.d/S??pwnscan ] && /system/bin/toybox chroot $NEW_ROOT /etc/init.d/pwnscan start
+[ -L $NEW_ROOT/etc/rc2.d/S??rc.local ] && /system/bin/toybox chroot $NEW_ROOT /etc/init.d/rc.local start
+[ -L $NEW_ROOT/etc/rc2.d/S??rsyslog ] && /system/bin/toybox chroot $NEW_ROOT /etc/init.d/rsyslog start
+
+# Android uses policy based routing and the table information is variable
+# Ensure files are hard linked at boot, copy if that fails
+rt_tables="/data/misc/net/rt_tables"
+if [ -r "${rt_tables}" ]; then
+  /system/bin/toybox ln -nf "${rt_tables}" $NEW_ROOT/etc/iproute2/rt_tables
+  if [ "$?" != "0" ]; then
+    /system/bin/toybox cp -f "${rt_tables}" $NEW_ROOT/etc/iproute2/rt_tables
+  fi
+fi
 
 # If first_boot.sh is in chroot root filesystem (/data/local/kali); then
 # run it to generate SSH keys, etc. This should be run last
 if [ -x $NEW_ROOT/first_boot.sh ]; then
-  /system/xbin/busybox chroot $NEW_ROOT /bin/bash -l -c /first_boot.sh
-fi
-
-# Android 5+ uses policy based routing and the table information is variable
-# ensure files are hard linked at boot, copy if that fails
-rt_tables="/data/misc/net/rt_tables"
-if [ -r "${rt_tables}" ]; then
-  /system/xbin/busybox ln -nf "${rt_tables}" $NEW_ROOT/etc/iproute2/rt_tables
-  if [ "$?" != "0" ]; then
-    /system/xbin/busybox cp -f "${rt_tables}" $NEW_ROOT/etc/iproute2/rt_tables
-  fi
+  /system/bin/toybox chroot $NEW_ROOT /bin/bash -l -c /first_boot.sh
 fi

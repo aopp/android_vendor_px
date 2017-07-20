@@ -4,7 +4,7 @@
 # Export chroot directory into variable
 export NEW_ROOT=/data/local/kali
 
-sysctl -w net.ipv4.ip_forward=1 > /dev/null 2>&1
+/system/bin/toybox sysctl -w net.ipv4.ip_forward=1 > /dev/null 2>&1
 
 # Setup environment variables for shell environment
 export HOME=/root
@@ -16,23 +16,21 @@ unset LD_PRELOAD
 
 echo "[!] Welcome to the Pwn zone. Get your game face on."
 
-/system/xbin/busybox stty columns 85
-/system/xbin/busybox stty rows 46
-
 # /data is being mounted with nosuid which breaks sudo/su in the chroot
-if /system/xbin/busybox mount | /system/xbin/busybox grep "/data " | /system/xbin/busybox grep -q nosuid; then
-  /system/xbin/busybox mount -o remount,suid /data
+if /system/bin/toybox mount | /system/bin/toybox grep "/data " | /system/bin/toybox grep -q nosuid; then
+  /system/bin/toybox mount -o remount,suid /data
 fi
 
-# Do these to normalize the android env into the expected chroot env and avoid env corruption
+# Normalize the Android env going into the chroot to avoid env conflicts
 export SHELL=/bin/bash
 unset MKSH
 unset TERMINFO
+unset TMPDIR
 
 if [ -n "$1" ]; then
   # Run the seeded task in the chroot
-  /system/xbin/busybox chroot $NEW_ROOT /bin/bash --login -c $1
+  /system/bin/toybox chroot $NEW_ROOT /bin/bash --login -c $1
 fi
 
 # Drop user to shell
-/system/xbin/busybox chroot $NEW_ROOT /bin/bash --login
+/system/bin/toybox chroot $NEW_ROOT /bin/bash --login
